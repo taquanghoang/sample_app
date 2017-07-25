@@ -32,7 +32,11 @@ class UserTest < ActiveSupport::TestCase
 
   test "email validation should reject invalid addresses" do
     invalid_addresses = %w(user@example,com user_at_foo.org user.name@example.
+<<<<<<< 5205bfca679d6b8fee090a952762723b505e6577
       foo@bar_baz.com foo@bar+baz.com)
+=======
+                           foo@bar_baz.com foo@bar+baz.com)
+>>>>>>> activation account
     invalid_addresses.each do |invalid_address|
       @user.email = invalid_address
       assert_not @user.valid?, "#{invalid_address.inspect} should be invalid"
@@ -64,6 +68,6 @@ class UserTest < ActiveSupport::TestCase
   end
 
   test "authenticated? should return false for a user with nil digest" do
-    assert_not @user.authenticated?("")
+    assert_not @user.authenticated?(:remember, "")
   end
 end

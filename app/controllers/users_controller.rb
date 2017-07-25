@@ -18,9 +18,9 @@ class UsersController < ApplicationController
   def create
     @user = User.new user_params
     if @user.save
-      log_in @user
-      flash[:success] = I18n.t("static_pages.welcome")
-      redirect_to @user
+      @user.send_activation_email
+      flash[:info] = I18n.t("static_pages.check_mail")
+      redirect_to root_url
       # Handle a successful save.
     else
       render :new
@@ -47,12 +47,35 @@ class UsersController < ApplicationController
 
   private
 
-  def user_params
-    params.require(:user).permit :name, :email, :password,
-      :password_confirmation
+  def update
+    @user = User.find(params[:id])
+    if @user.update_attributes(user_params)
+      flash[:success] = I18n.t("static_pages.profile_updated")
+      redirect_to @user
+    else
+      render "edit"
+    end
   end
 
   def load_user
     @user = User.find_by id: params[:id]
+  # Confirms a logged-in user.
+  def logged_in_user
+    unless logged_in?
+      store_location
+      flash[:danger] = I18n.t("static_pages.please_login")
+      redirect_to login_url
+    end
+  end
+
+  # Confirms the correct user.
+  def correct_user
+    @user = User.find(params[:id])
+    redirect_to(root_url) unless current_user?(@user)
+  end
+
+  # Confirms an admin user.
+  def admin_user
+    redirect_to(root_url) unless current_user.admin?
   end
 end
