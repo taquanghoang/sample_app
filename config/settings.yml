@@ -1,0 +1,4 @@
+size: 80
+from_email: "noreply@example.com"
+to_email: "to@example.org"
+remember_me: "1"
