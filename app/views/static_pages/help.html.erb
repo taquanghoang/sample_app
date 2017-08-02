@@ -1,0 +1,16 @@
+<% provide(:title, t("static_pages.help")) %>
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= yield(:title) %> | <%= t("static_pages.rubyonrails") %></title>
+  </head>
+  <body>
+    <h1><%= t("static_pages.help") %></h1>
+    <p>
+      <%= t("static_pages.help_get_the") %>
+      <a href="http://www.railstutorial.org/help"><%= t("static_pages.help_section") %></a>.
+      <%= t("static_pages.help_to_the") %>
+      <a href="http://www.railstutorial.org/book"><%= t("static_pages.rubytutorial") %></em> <%= t("static_pages.book") %></a>.
+    </p>
+  </body>
+</html>
