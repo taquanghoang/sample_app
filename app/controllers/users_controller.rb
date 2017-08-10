@@ -1,12 +1,14 @@
 class UsersController < ApplicationController
+  before_action :logged_in_user, except: [:new, :create, :show]
+  before_action :correct_user, only: [:edit, :update]
+  before_action :admin_user, only: :destroy
+  before_action :load_user, only: [:show, :update, :destroy]
+
+  def index
+    @users = User.paginate(page: params[:page])
+  end
+
   def show
-    @user = User.find_by id: params[:id]
-    if @user.blank?
-      flash[:success] = I18n.t("static_pages.msg_invalid_user")
-      redirect_to signup_path
-    else
-      flash.now[:success] = I18n.t("static_pages.welcome")
-    end
   end
 
   def new
@@ -25,10 +27,32 @@ class UsersController < ApplicationController
     end
   end
 
+  def edit
+  end
+
+  def update
+    if @user.update_attributes(user_params)
+      flash[:success] = I18n.t("static_pages.profile_updated")
+      redirect_to @user
+    else
+      render "edit"
+    end
+  end
+
+  def destroy
+    @user.destroy
+    flash[:success] = I18n.t("static_pages.user_deleted")
+    redirect_to users_url
+  end
+
   private
 
   def user_params
     params.require(:user).permit :name, :email, :password,
       :password_confirmation
+  end
+
+  def load_user
+    @user = User.find_by id: params[:id]
   end
 end
